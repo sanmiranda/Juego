@@ -42,9 +42,9 @@ var ffmalos =[
 
 //clases
 function Board(){
-  this.x= 170
+  this.x= 200
   this.y= 0
-  this.width = canvas.width
+  this.width = canvas.with
   this.height = canvas.height
   this.image = new Image()
   this.image.src = imagenes.fondoff
@@ -192,11 +192,11 @@ generateItems()
 */
 function generateMalos(){
   //necesitamos anchura
-  if (frames%30===0) return;
+  if (frames%100===0) {
   var enem = new Malo()
    malos.push(enem);
   //  malos.push(maloff(w,ffmalos[Math.floor(Math.random()*ffmalos.lenght)]))
-  
+  }
 }
 //esta funcion los pasa de anonimos a genericos
 function drawMalos(){
