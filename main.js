@@ -14,6 +14,17 @@ var imagenes ={
   fondotop: src ="./Imagenes/Baron.gif",
   rydia1: src ="./Imagenes/rydia1.png",
   rydia2: src ="./Imagenes/rydia2.png",
+  fondocast: src="./Imagenes/fondo cast.png",
+  castillo: src="./Imagenes/castilloctl.png",
+  simon1: src ="./Personajes/simon1.png",
+  simon2: src ="./Personajes/simon2.png",
+  chest: src ="./Imagenes/RedChest1.gif",
+  chocobo1: src ="./porra/Chocobo-Front.gif",
+  chocobo2: src ="./porra/chocobo2.png",
+  ken1: src ="./porra/ken1.png",
+  ken2: src ="./porra/ken2.png",
+  ghost1: src ="./porra/ghost1.png",
+  ghost2: src ="./porra/ghost2.png",
 
   //itemff:src ="./Imagenes/Crystal-Large.gif",
 
@@ -27,6 +38,9 @@ var audio ={
 var malos=[]
 
 var cristales=[]
+var porra=[
+
+]
 
 var ffmalos =[
 "./malos FF/Antlion.gif",
@@ -46,7 +60,15 @@ var ffmalos =[
 ]
 var itCristales=[
   "./Imagenes/Crystal-Large.gif",
+]
+var corazones=[
+  "./Imagenes/Heart.gif",
+]
 
+var castMalos=[
+"./malos castlevania/GrimReaper.png",
+"./malos castlevania/Skele-Dragon.gif",
+"./malos castlevania/TheCount.gif",
 ]
 //clases
 function Board(){
@@ -103,8 +125,9 @@ function Character(){
     var img = this.which ? this.image:this.image2
     ctx.drawImage(img,this.x,this.y,this.width,this.height)
     if(frames%10===0) this.toggleWhich()
-
-    ctx.fillText(this.score, 20, 20)
+    ctx.font ="bold 30px arial"
+    ctx.fillStyle ="blue"
+    ctx.fillText(this.score,100, 50)
     this.toggleWhich = function(){
       this.which = !this.which
     } 
@@ -123,6 +146,47 @@ function Rydia(){
   this.image.src = imagenes.rydia1
   this.image2 = new Image()
   this.image2.src = imagenes.rydia2
+}
+
+function Chest(){
+  Top.call(this)
+  this.x = 20
+  this.y = 20
+  this.width = 50
+  this.height = 50
+  this.image = new Image()
+  this.image.src = imagenes.chest
+
+}
+function Chocobo(){
+  Character.call(this)
+  this.x = 80
+  this.y = 140
+  this.image = new Image()
+  this.image.src = imagenes.chocobo1
+  this.image2 = new Image()
+  this.image2.src = imagenes.chocobo2
+ 
+
+}
+function Ken(){
+  Character.call(this)
+  this.x = 10
+  this.y = 180
+  this.image = new Image()
+  this.image.src = imagenes.ken1
+  this.image2 = new Image()
+  this.image2.src = imagenes.ken2
+}
+
+function Ghost(){
+  Character.call(this)
+  this.x = 140
+  this.y = 420
+  this.image = new Image()
+  this.image.src = imagenes.ghost1
+  this.image2 = new Image()
+  this.image2.src = imagenes.ghost2
 }
   /*  this.boundaries()
     ctx.drawImage(this.image,this.x,this.y,this.width,this.height)
@@ -159,10 +223,10 @@ function Malo(){
 }
 
 function Item(){
-  this.width=20
-  this.height=30
+  this.width=30
+  this.height=40
   this.y = canvas.width - 500
-  this.x =  Math.floor((Math.random() * 200 + 150 )) + (this.height/2);
+  this.x =  Math.floor((Math.random() * 200 + 250 )) + (this.height/2);
   this.image = new Image ()
   this.image.src = itCristales[Math.floor(Math.random()*itCristales.length)]
   this.draw = function(){
@@ -186,15 +250,25 @@ var musica = new Audio()
 var fondoiz = new Nintendo()
 var fondtop = new Top()
 var rydiaa = new Rydia()
+var cofre = new Chest()
+var choco = new Chocobo()
+var kens = new Ken()
+var ghos = new Ghost()
 //var cristal = new Item()
 
 //main functions
 function start(){
+  frames=0
+  malos=[]
+  cristales=[]
+  //kane = new Charatcter()
   interval = setInterval(update, 1000/60)
   musica = new Audio()
   musica.src = audio.ff
   musica.play()
- 
+ if(!interval){
+  interval = setInterval(update, 1000/60)
+ }
 }
 function update(){
   frames++
@@ -204,6 +278,10 @@ function update(){
   fondoiz.draw()
   fondtop.draw()
   rydiaa.draw()
+  cofre.draw()
+  choco.draw()
+  kens.draw()
+  ghos.draw()
   checkCharacterCollition()
   generateItems()
   drawItems()
@@ -211,11 +289,11 @@ function update(){
   drawMalos()
 
  
+
+ 
   
 }
   
-
-//dibujar
 
 function gameOver(){
   clearInterval(interval)
@@ -225,12 +303,16 @@ function gameOver(){
   ctx.fillText("GAME OVER", 50,200)
   ctx.fillStyle = "white"
   ctx.font = "bold 40px Arial"
-  ctx.fillText("Tu score: " + Math.floor(frames/60), 200,300)
+  ctx.fillText("Tu score: " , 200,300)
   ctx.font = "bold 20px Arial"
   ctx.fillText("Presiona 'Return' para reiniciar", 50,350)
   musica = new Audio()
   musica.src = audio.fin
   musica.play()
+}
+
+function levelUp(){
+
 }
 
 //aux functions
@@ -239,7 +321,8 @@ function drawCover(){
   img.src = imagenes.logo
   img.onload = function(){
       fondoff.draw()
-      ctx.drawImage(img, 180,100,300,100)
+      fondoiz.draw()
+      ctx.drawImage(img, 200,100,300,100)
   }
 }
 
@@ -288,7 +371,8 @@ function drawMalos(){
 addEventListener('keydown',function(e){
   switch(e.keyCode){
     case 13:
-      return start()
+     return start()
+      break;
     default:
       return
   }
@@ -309,4 +393,5 @@ addEventListener('keydown',function(e){
       return
   }
 })
+
 drawCover()
