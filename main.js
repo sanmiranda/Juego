@@ -205,7 +205,9 @@ function Malo(){
   this.width=100
   this.height=100
   this.y = canvas.width - 400
-  this.x =  Math.floor((Math.random() * 200 + 150 )) + (this.height/2);
+  this.array= [200,300,400]
+  this.index =  Math.floor((Math.random() * 3));
+  this.x = this.array[this.index]
   this.image = new Image ()
   this.image.src = ffmalos[Math.floor(Math.random()*ffmalos.length)]
   this.draw= function(){
@@ -226,7 +228,9 @@ function Item(){
   this.width=30
   this.height=40
   this.y = canvas.width - 500
-  this.x =  Math.floor((Math.random() * 200 + 250 )) + (this.height/2);
+  this.array= [220,330,440]
+  this.index =  Math.floor((Math.random() * 3));
+  this.x = this.array[this.index]
   this.image = new Image ()
   this.image.src = itCristales[Math.floor(Math.random()*itCristales.length)]
   this.draw = function(){
@@ -288,12 +292,27 @@ function update(){
   generateMalos()
   drawMalos()
 
+ /* if(kane.score >= 4 && kane.score < 21){ 
+  ctx.clearRect(0,0,canvas.width, canvas.height)
+  fondocast.draw()
+  kane.draw()
+  fondoiz.draw()
+  fondocast.draw()
+  rydiaa.draw()
+  cofre.draw()
+  choco.draw()
+  kens.draw()
+  ghos.draw()
+  checkCharacterCollition()
+  generateItems()
+  drawItems()
+  generateMalos()
+  drawMalos()
+ }
  
-
- 
-  
+*/
 }
-  
+
 
 function gameOver(){
   clearInterval(interval)
@@ -345,7 +364,7 @@ cristales.forEach(function(cris, index){
 
 function generateMalos(){
   //necesitamos anchura
-  if (frames%180===0) {
+  if (frames%200===0) {
   var enem = new Malo()
    malos.push(enem);
   //  malos.push(maloff(w,ffmalos[Math.floor(Math.random()*ffmalos.lenght)]))
