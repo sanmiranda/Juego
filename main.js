@@ -6,19 +6,22 @@ var ctx = canvas.getContext('2d')
 var interval = null;
 var frames = 0;
 var imagenes ={
-  fondoff:"https://vignette.wikia.nocookie.net/finalfantasy/images/2/27/Battleback_plains_a.png/revision/latest?cb=20141030004426",
-  fondoff2:"https://vignette.wikia.nocookie.net/finalfantasy/images/2/27/Battleback_plains_a.png/revision/latest?cb=20141030004426",
+  fondoff: src ="./Imagenes/pastoverde.png",
   fondoizquierda: src ="./Imagenes/control3.png",
-  kane: src ="./imagenes/Kain-Walk1.jpg",
-  kane2: src ="./Imagenes/Kain-Walk2.jpg",
+  kane: src ="./Personajes/Kane.png",
+  kane2: src ="./Personajes/Kane2.png",
   logo: src ="./imagenes/Retro-Runner2.png",
+  fondotop: src ="./Imagenes/Baron.gif",
+  rydia1: src ="./Imagenes/rydia1.png",
+  rydia2: src ="./Imagenes/rydia2.png",
 
   //itemff:src ="./Imagenes/Crystal-Large.gif",
 
 }
 var audio ={
-  ff:"http://66.90.93.122/soundfiles/nintendo-snes-spc/final-fantasy-iv/13%20Fight%202.mp3"
-
+  ff:"http://66.90.93.122/soundfiles/nintendo-snes-spc/final-fantasy-iv/13%20Fight%202.mp3",
+  fin: src ="./Musica/32 - All Gone (Game Over).mp3",
+  boom: src="./Musica/boomshakalaka.mp3",
 }
 
 var malos=[]
@@ -72,6 +75,18 @@ function Nintendo(){
     
   }
 }
+function Top(){
+this.x=200
+this.y=0
+this.width = 300
+this.height = 100
+this.image = new Image()
+this.image.src = imagenes.fondotop
+this.draw = function(){
+ctx.drawImage(this.image,this.x,this.y,this.width,this.height)
+}
+}
+
 
 function Character(){
   this.which =true;
@@ -83,15 +98,31 @@ function Character(){
   this.image.src = imagenes.kane
   this.image2 = new Image()
   this.image2.src = imagenes.kane2
+  this.score = 0
   this.draw = function(){
     var img = this.which ? this.image:this.image2
     ctx.drawImage(img,this.x,this.y,this.width,this.height)
     if(frames%10===0) this.toggleWhich()
 
-  this.toggleWhich = function(){
-    this.which = !this.which
-} 
+    ctx.fillText(this.score, 20, 20)
+    this.toggleWhich = function(){
+      this.which = !this.which
+    } 
+  }
+  if(this.score===10){
+    musica = new Audio()
+  musica.src = audio.boom
+  musica.play()
+  }
 }
+function Rydia(){
+  Character.call(this)
+  this.x = 50
+  this.y = 350
+  this.image = new Image()
+  this.image.src = imagenes.rydia1
+  this.image2 = new Image()
+  this.image2.src = imagenes.rydia2
 }
   /*  this.boundaries()
     ctx.drawImage(this.image,this.x,this.y,this.width,this.height)
@@ -109,14 +140,22 @@ this.boundaries = function(){
 function Malo(){
   this.width=100
   this.height=100
-  this.y = canvas.width - 500
+  this.y = canvas.width - 400
   this.x =  Math.floor((Math.random() * 200 + 150 )) + (this.height/2);
   this.image = new Image ()
   this.image.src = ffmalos[Math.floor(Math.random()*ffmalos.length)]
   this.draw= function(){
     this.y+=1
     ctx.drawImage(this.image,this.x,this.y,this.width,this.height)
+
+    this.isTouching = function(item){
+      return (this.x < item.x + item.width) &&
+      (this.x + this.width > item.x) &&
+      (this.y < item.y + item.height) &&
+      (this.y + this.height > item.y)
+     
   }
+}
 }
 
 function Item(){
@@ -130,27 +169,23 @@ function Item(){
     this.y+=1.5
     ctx.drawImage(this.image,this.x,this.y,this.width,this.height)
   } 
-}
-var score = 1
-
-this.isTouching = function(item){
-  return (this.x < item.x + item.width) &&
-  (this.x + this.width > item.x) &&
-  (this.y < item.y + item.height) &&
-  (this.y + this.height > item.y)
-
+  this.isTouching = function(item){
+    return (this.x < item.x + item.width) &&
+    (this.x + this.width > item.x) &&
+    (this.y < item.y + item.height) &&
+    (this.y + this.height > item.y)
+  
+  }
 }
 
-this.drawScore = function(){
-  ctx.font = "bold 24px Avenir"
- // ctx.fillText("Items: " + grabItem, 50,50)
-}
 
 //instancias
 var fondoff = new Board()
 var kane = new Character()
 var musica = new Audio()
 var fondoiz = new Nintendo()
+var fondtop = new Top()
+var rydiaa = new Rydia()
 //var cristal = new Item()
 
 //main functions
@@ -167,13 +202,14 @@ function update(){
   fondoff.draw()
   kane.draw()
   fondoiz.draw()
-  //checkCharacterCollition()
-  //grabItem()
-  //generateItems()
-  //drawItems()
+  fondtop.draw()
+  rydiaa.draw()
+  checkCharacterCollition()
+  generateItems()
+  drawItems()
   generateMalos()
   drawMalos()
-  drawScore()
+
  
   
 }
@@ -184,14 +220,17 @@ function update(){
 function gameOver(){
   clearInterval(interval)
   interval = null
-  ctx.fillStyle = "red"
+  ctx.fillStyle = "white"
   ctx.font = "bold 80px Arial"
   ctx.fillText("GAME OVER", 50,200)
-  ctx.fillStyle = "black"
+  ctx.fillStyle = "white"
   ctx.font = "bold 40px Arial"
   ctx.fillText("Tu score: " + Math.floor(frames/60), 200,300)
   ctx.font = "bold 20px Arial"
   ctx.fillText("Presiona 'Return' para reiniciar", 50,350)
+  musica = new Audio()
+  musica.src = audio.fin
+  musica.play()
 }
 
 //aux functions
@@ -203,24 +242,27 @@ function drawCover(){
       ctx.drawImage(img, 180,100,300,100)
   }
 }
-/*
+
 function generateItems(){
-  if (frames%4
-    0===0) {
+  if (frames%40===0) {
     var ite = new Item()
     cristales.push(ite);
   }
 }
 
 function drawItems(){
-cristales.forEach(function(cris){
+cristales.forEach(function(cris, index){
   cris.draw()
+  if(cris.isTouching(kane)){
+    kane.score++
+    cristales.splice(index, 1)
+  }
 })
 }
-*/
+
 function generateMalos(){
   //necesitamos anchura
-  if (frames%170===0) {
+  if (frames%180===0) {
   var enem = new Malo()
    malos.push(enem);
   //  malos.push(maloff(w,ffmalos[Math.floor(Math.random()*ffmalos.lenght)]))
@@ -233,23 +275,15 @@ function drawMalos(){
   
   })
  }
-/*
+
  function checkCharacterCollition(){
-  for(var arr of malos){
-      if(Character.isTouching(arr)){
+  for(var malo of malos){
+      if(malo.isTouching(kane)){
           gameOver()
       }
   }
 }
 
-function grabItem(){
-  for(var agr of cristales){
-      if(Character.isTouching(agr)){
-          score + score++
-      }
-  }
-}
-*/
 //listeners
 addEventListener('keydown',function(e){
   switch(e.keyCode){
