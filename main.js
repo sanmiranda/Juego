@@ -204,7 +204,7 @@ this.boundaries = function(){
 function Malo(){
   this.width=100
   this.height=100
-  this.y = canvas.width - 400
+  this.y = canvas.width - 450
   this.array= [200,300,400]
   this.index =  Math.floor((Math.random() * 3));
   this.x = this.array[this.index]
@@ -341,7 +341,7 @@ function drawCover(){
   img.onload = function(){
       fondoff.draw()
       fondoiz.draw()
-      ctx.drawImage(img, 200,100,300,100)
+      ctx.drawImage(img, 80,10,400,200)
   }
 }
 
