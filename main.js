@@ -11,7 +11,7 @@ var imagenes ={
   kane: src ="./imagenes/Kain-Walk1.jpg",
   kane2: src ="./Imagenes/Kain-Walk2.jpg",
   logo:src ="./imagenes/Retro-Runner2.png",
-  itemff:src ="./Imagenes/Crystal-Large.gif"
+  //itemff:src ="./Imagenes/Crystal-Large.gif",
 
 }
 var audio ={
@@ -39,12 +39,15 @@ var ffmalos =[
 "./malos FF/Zemus.gif",
 "./malos FF/Zeromus2.gif",
 ]
+var itCristales=[
+  "./Imagenes/Crystal-Large.gif",
 
+]
 //clases
 function Board(){
   this.x= 200
   this.y= 0
-  this.width = canvas.with
+  this.width = canvas.width
   this.height = canvas.height
   this.image = new Image()
   this.image.src = imagenes.fondoff
@@ -61,8 +64,8 @@ function Character(){
   this.which =true;
   this.x = 300
   this.y = 400
-  this.width = 50
-  this.height = 50
+  this.width = 70
+  this.height = 70
   this.image = new Image()
   this.image.src = imagenes.kane
   this.image2 = new Image()
@@ -71,6 +74,12 @@ function Character(){
     var img = this.which ? this.image:this.image2
     ctx.drawImage(img,this.x,this.y,this.width,this.height)
     if(frames%10===0) this.toggleWhich()
+
+  this.toggleWhich = function(){
+    this.which = !this.which
+} 
+}
+}
   /*  this.boundaries()
     ctx.drawImage(this.image,this.x,this.y,this.width,this.height)
 }
@@ -82,21 +91,15 @@ this.boundaries = function(){
         this.x = 100
  
   }*/
-  this.toggleWhich = function(){
-    this.which = !this.which
-} 
-}
-}
+
 
 function Malo(){
   this.width=100
   this.height=100
   this.y = canvas.width - 500
   this.x =  Math.floor((Math.random() * canvas.width - this.width )) + (this.height/2);
-  
   this.image = new Image ()
   this.image.src = ffmalos[Math.floor(Math.random()*ffmalos.length)]
-  // this.image.src = ffmalosArr[Math.floor(Math.random()*ffmalosArr.length)]
   this.draw= function(){
     this.y+=1
     ctx.drawImage(this.image,this.x,this.y,this.width,this.height)
@@ -104,12 +107,12 @@ function Malo(){
 }
 
 function Item(){
-  this.y = canvas.width - 500
-  this.x = 200
   this.width=20
   this.height=30
+  this.y = canvas.width - 500
+  this.x =  Math.floor((Math.random() * canvas.width - this.width )) + (this.height/2);
   this.image = new Image ()
-  this.image.src = imagenes.itemff
+  this.image.src = itCristales[Math.floor(Math.random()*itCristales.length)]
   this.draw = function(){
     this.y+=1.5
     ctx.drawImage(this.image,this.x,this.y,this.width,this.height)
@@ -121,19 +124,20 @@ this.isTouching = function(item){
   return (this.x < item.x + item.width) &&
   (this.x + this.width > item.x) &&
   (this.y < item.y + item.height) &&
-  (this.y + this.height > item.y);
+  (this.y + this.height > item.y)
+
 }
 
 this.drawScore = function(){
   ctx.font = "bold 24px Avenir"
-  ctx.fillText("Items: " + grabItem(), 50,50)
+ // ctx.fillText("Items: " + grabItem, 50,50)
 }
 
 //instancias
 var fondoff = new Board()
 var kane = new Character()
 var musica = new Audio()
-var cristal = new Item()
+//var cristal = new Item()
 
 //main functions
 function start(){
@@ -148,12 +152,15 @@ function update(){
   ctx.clearRect(0,0,canvas.width, canvas.height)
   fondoff.draw()
   kane.draw()
+  //checkCharacterCollition()
+  //grabItem()
+  generateItems()
+  drawItems()
   generateMalos()
   drawMalos()
-  //checkCharacterCollition()
-  cristal.draw()
-  grabItem()
   drawScore()
+ 
+  
 }
   
 
@@ -182,14 +189,19 @@ function drawCover(){
   }
 }
 
-/*function generateItems(){
-  if(frames%10===0) drawItem()
+function generateItems(){
+  if (frames%30===0) {
+    var ite = new Item()
+    cristales.push(ite);
+  }
 }
 
-function drawItem(){
-generateItems()
+function drawItems(){
+cristales.forEach(function(cris){
+  cris.draw()
+})
 }
-*/
+
 function generateMalos(){
   //necesitamos anchura
   if (frames%100===0) {
@@ -202,7 +214,7 @@ function generateMalos(){
 function drawMalos(){
   malos.forEach(function(maloff){
     maloff.draw()
-    console.log(maloff.x);
+  
   })
  }
 
@@ -213,6 +225,7 @@ function drawMalos(){
       }
   }
 }
+
 function grabItem(){
   for(var agr of cristales){
       if(Character.isTouching(agr)){
@@ -220,8 +233,6 @@ function grabItem(){
       }
   }
 }
-
-
 
 //listeners
 addEventListener('keydown',function(e){
