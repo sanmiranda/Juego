@@ -8,9 +8,11 @@ var frames = 0;
 var imagenes ={
   fondoff:"https://vignette.wikia.nocookie.net/finalfantasy/images/2/27/Battleback_plains_a.png/revision/latest?cb=20141030004426",
   fondoff2:"https://vignette.wikia.nocookie.net/finalfantasy/images/2/27/Battleback_plains_a.png/revision/latest?cb=20141030004426",
+  fondoizquierda: src ="./Imagenes/control3.png",
   kane: src ="./imagenes/Kain-Walk1.jpg",
   kane2: src ="./Imagenes/Kain-Walk2.jpg",
-  logo:src ="./imagenes/Retro-Runner2.png",
+  logo: src ="./imagenes/Retro-Runner2.png",
+
   //itemff:src ="./Imagenes/Crystal-Large.gif",
 
 }
@@ -58,14 +60,25 @@ function Board(){
     ctx.drawImage(this.image,this.x,this.y-this.height,this.width,this.height)
 }
 }
-
+function Nintendo(){
+  this.x=0
+  this.y=80
+  this.width = 200
+  this.height = 420
+  this.image = new Image()
+  this.image.src = imagenes.fondoizquierda
+  this.draw = function(){
+  ctx.drawImage(this.image,this.x,this.y,this.width,this.height)
+    
+  }
+}
 
 function Character(){
   this.which =true;
-  this.x = 300
+  this.x = 320
   this.y = 400
-  this.width = 70
-  this.height = 70
+  this.width = 60
+  this.height = 60
   this.image = new Image()
   this.image.src = imagenes.kane
   this.image2 = new Image()
@@ -97,7 +110,7 @@ function Malo(){
   this.width=100
   this.height=100
   this.y = canvas.width - 500
-  this.x =  Math.floor((Math.random() * canvas.width - this.width )) + (this.height/2);
+  this.x =  Math.floor((Math.random() * 200 + 150 )) + (this.height/2);
   this.image = new Image ()
   this.image.src = ffmalos[Math.floor(Math.random()*ffmalos.length)]
   this.draw= function(){
@@ -110,7 +123,7 @@ function Item(){
   this.width=20
   this.height=30
   this.y = canvas.width - 500
-  this.x =  Math.floor((Math.random() * canvas.width - this.width )) + (this.height/2);
+  this.x =  Math.floor((Math.random() * 200 + 150 )) + (this.height/2);
   this.image = new Image ()
   this.image.src = itCristales[Math.floor(Math.random()*itCristales.length)]
   this.draw = function(){
@@ -137,6 +150,7 @@ this.drawScore = function(){
 var fondoff = new Board()
 var kane = new Character()
 var musica = new Audio()
+var fondoiz = new Nintendo()
 //var cristal = new Item()
 
 //main functions
@@ -152,10 +166,11 @@ function update(){
   ctx.clearRect(0,0,canvas.width, canvas.height)
   fondoff.draw()
   kane.draw()
+  fondoiz.draw()
   //checkCharacterCollition()
   //grabItem()
-  generateItems()
-  drawItems()
+  //generateItems()
+  //drawItems()
   generateMalos()
   drawMalos()
   drawScore()
@@ -188,9 +203,10 @@ function drawCover(){
       ctx.drawImage(img, 180,100,300,100)
   }
 }
-
+/*
 function generateItems(){
-  if (frames%30===0) {
+  if (frames%4
+    0===0) {
     var ite = new Item()
     cristales.push(ite);
   }
@@ -201,10 +217,10 @@ cristales.forEach(function(cris){
   cris.draw()
 })
 }
-
+*/
 function generateMalos(){
   //necesitamos anchura
-  if (frames%100===0) {
+  if (frames%170===0) {
   var enem = new Malo()
    malos.push(enem);
   //  malos.push(maloff(w,ffmalos[Math.floor(Math.random()*ffmalos.lenght)]))
@@ -217,7 +233,7 @@ function drawMalos(){
   
   })
  }
-
+/*
  function checkCharacterCollition(){
   for(var arr of malos){
       if(Character.isTouching(arr)){
@@ -233,7 +249,7 @@ function grabItem(){
       }
   }
 }
-
+*/
 //listeners
 addEventListener('keydown',function(e){
   switch(e.keyCode){
@@ -247,13 +263,13 @@ addEventListener('keydown',function(e){
 
 addEventListener('keydown', (e) => {
   if (e.keyCode === 37)
-  kane.x -=100
+  kane.x -=120
 })
 
 addEventListener('keydown',function(e){
   switch(e.keyCode){
     case 39:
-      kane.x +=100
+      kane.x +=120
       return 
     default:
       return
