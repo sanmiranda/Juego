@@ -46,6 +46,10 @@ var imagenes ={
   boo2: src="./porra/boo2.png",
   yoshi1: src="./porra/1.png",
   yoshi2: src="./porra/yoshi23.png",
+  mm1: src ="./porra/mm1.png",
+  mm2: src ="./porra/mm2.png",
+  hipo1: src ="./porra/hipo2.png",
+  hipo2: src ="./porra/hipo1.png",
  
 
 
@@ -315,6 +319,24 @@ function Yoshi(){
   this.image2 = new Image()
   this.image2.src = imagenes.yoshi2
 }
+function Macho(){
+  Rydia.call(this)
+  this.x = 120
+  this.y = 100
+  this.image = new Image()
+  this.image.src = imagenes.mm1
+  this.image2 = new Image()
+  this.image2.src = imagenes.mm2
+}
+function Hipo(){
+  Rydia.call(this)
+  this.x = 120
+  this.y = 280
+  this.image = new Image()
+  this.image.src = imagenes.hipo1
+  this.image2 = new Image()
+  this.image2.src = imagenes.hipo2
+}
 
 function Malo(src){
   this.width=100
@@ -382,7 +404,8 @@ var rana = new Rana()
 var marle  = new Marlene()
 var bo = new Boo()
 var yo = new Yoshi()
-
+var mach = new Macho()
+var hipo = new Hipo()
 
 //main functions
 function start(){
@@ -416,6 +439,8 @@ function update(){
   rana.draw()
   bo.draw()
   yo.draw()
+  hipo.draw()
+  mach.draw()
   checkCharacterCollition()
   generateItems()
   drawItems()
@@ -427,7 +452,7 @@ function update(){
 
 function checkLevel(){
 
-    if(kane.score < 5){
+    if(kane.score < 33){
     fondoff.image.src = imagenes.fondoff
     fondtop.image.src = imagenes.fondotop
     //personaje
@@ -443,7 +468,7 @@ function checkLevel(){
     malosFrames = 80
    //musica
 }
-  else if(kane.score >= 5 && kane.score<= 70 ){
+  else if(kane.score >= 34 && kane.score<= 70 ){
 
     
     //board
@@ -464,7 +489,7 @@ function checkLevel(){
   
   }
 
-  else if(kane.score >= 71 && kane.score<= 110){
+  else if(kane.score >= 105 && kane.score<= 140){
     fondoff.image.src = imagenes.zfondo
     fondtop.image.src = imagenes.ztop
     //personaje
@@ -480,7 +505,7 @@ function checkLevel(){
     itemFrames = 40
     malosFrames = 70
   }
-  else if(kane.score >= 110 && kane.score<= 1000 ){
+  else if(kane.score >= 141 && kane.score<= 1000 ){
     fondoff.image.src = imagenes.cfondo
     fondtop.image.src = imagenes.ctop
     //personaje
