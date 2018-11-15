@@ -1,4 +1,8 @@
 body {
   text-align: center;
 }
-
+img {
+  size: 510px;
+  display: flex;
+  align-content: end;
+}
